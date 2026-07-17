@@ -3,24 +3,55 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "next dev frontend",
+    "build": "next build frontend",
+    "start": "next start frontend",
+    "lint": "eslint",
+    "contracts:compile": "hardhat --config contracts/hardhat.config.ts compile",
+    "contracts:clean": "hardhat --config contracts/hardhat.config.ts clean",
+    "contracts:deploy:fuji": "hardhat --config contracts/hardhat.config.ts run contracts/scripts/deploy.ts --network avalancheFuji",
+    "contracts:deploy:mainnet": "hardhat --config contracts/hardhat.config.ts run contracts/scripts/deploy.ts --network avalancheMainnet"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.19",
+    "@radix-ui/react-separator": "^1.1.11",
+    "@radix-ui/react-slot": "^1.3.0",
+    "@radix-ui/react-tooltip": "^1.2.12",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.42.2",
+    "lenis": "^1.3.25",
+    "lucide-react": "^1.25.0",
     "next": "16.2.10",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-viem": "^3.0.9",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "hardhat": "^3.10.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
-  }
+    "typescript": "^5",
+    "viem": "^2.55.2"
+  },
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soujanya-Mctrl/Sentinel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Soujanya-Mctrl/Sentinel/issues"
+  },
+  "homepage": "https://github.com/Soujanya-Mctrl/Sentinel#readme"
 }
