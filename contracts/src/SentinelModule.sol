@@ -1,77 +1,35 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
-import "@safe-global/safe-contracts/contracts/Safe.sol";
-import "./Errors.sol";
-import "./Events.sol";
 import "./PolicyEngine.sol";
 import "./TreasuryManager.sol";
 import "./AuditRegistry.sol";
-import "./IeERCAdapter.sol";
 
+/// @notice Minimal Sentinel module skeleton for demo and integration
 contract SentinelModule {
-    Safe public immutable safe;
     PolicyEngine public policyEngine;
-    TreasuryManager public treasuryManager;
-    AuditRegistry public auditRegistry;
-    IeERCAdapter public eERCAdapter;
+    TreasuryManager public treasury;
+    AuditRegistry public audit;
 
-    uint256 public nonce;
+    event TransferProposed(address indexed proposer, address indexed to, bytes encryptedAmount, bytes32 proposalId);
 
-    struct Proposal {
-        address recipient;
-        bytes ciphertext;
-        bytes proof;
-        address proposer;
-        bool processed;
-    }
-    
-    mapping(bytes32 => Proposal) public proposals;
-
-    constructor(
-        address payable _safe,
-        address _policyEngine,
-        address _treasuryManager,
-        address _auditRegistry,
-        address _eERCAdapter
-    ) {
-        safe = Safe(_safe);
-        policyEngine = PolicyEngine(_policyEngine);
-        treasuryManager = TreasuryManager(_treasuryManager);
-        auditRegistry = AuditRegistry(_auditRegistry);
-        eERCAdapter = IeERCAdapter(_eERCAdapter);
+    constructor(address _policy, address _treasury, address _audit) {
+        policyEngine = PolicyEngine(_policy);
+        treasury = TreasuryManager(_treasury);
+        audit = AuditRegistry(_audit);
     }
 
-    function proposeTransfer(address recipient, bytes calldata ciphertext, bytes calldata proof) external {
-        if (!safe.isOwner(msg.sender)) {
-            revert Errors.NotSafeOwner();
-        }
-        
-        if (!eERCAdapter.verifyProof(ciphertext, proof)) {
-            revert Errors.InvalidProof();
-        }
+    /// @notice Propose a transfer with encrypted amount payload. Emits event consumed by off-chain Policy Service.
+    function proposeTransfer(address to, bytes calldata encryptedAmount, bytes calldata metadata) external returns (bytes32) {
+        // create a proposal id
+        bytes32 id = keccak256(abi.encodePacked(msg.sender, to, encryptedAmount, block.timestamp));
 
-        nonce++;
-        bytes32 proposalId = keccak256(abi.encodePacked(msg.sender, recipient, ciphertext, nonce));
-        
-        emit Events.TransferProposed(proposalId, msg.sender, recipient, keccak256(ciphertext), block.timestamp);
-        
-        proposals[proposalId] = Proposal(recipient, ciphertext, proof, msg.sender, false);
-    }
+        // emit event for backend to pick up (policy checks happen off-chain against scoped view key)
+        emit TransferProposed(msg.sender, to, encryptedAmount, id);
 
-    function evaluateProposal(bytes32 proposalId, uint256 revealedAmount, bytes calldata bindingProof) external {
-        Proposal storage p = proposals[proposalId];
-        require(p.proposer != address(0), "Proposal not found");
-        require(!p.processed, "Already processed");
-        p.processed = true;
+        // store audit commitment (on-chain minimal commitment)
+        audit.recordCommitment(id, msg.sender, keccak256(encryptedAmount), metadata);
 
-        (bool passed, bytes32 reasonCode) = policyEngine.evaluate(proposalId, revealedAmount, bindingProof, p.recipient);
-
-        if (passed) {
-            treasuryManager.queueTransfer(proposalId, p.recipient, p.ciphertext, p.proof);
-            emit Events.TransferApproved(proposalId, bytes32(0)); 
-        } else {
-            auditRegistry.logRejection(proposalId, reasonCode);
-        }
+        return id;
     }
 }

@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Policy {
+  id           Int      @id @default(autoincrement())
+  subject      String   @unique
+  cap          String   // store as string to avoid JS bigint issues; interpret off-chain
+  windowSecs   Int
+  spentInWindow String  @default("0")
+  windowStart  DateTime @default(now())
+}
+
+model Proposal {
+  id            Int      @id @default(autoincrement())
+  proposalId    String   @unique
+  proposer      String
+  to            String
+  encryptedAmount String
+  metadata      String?
+  status        String   @default("PENDING")
+  createdAt     DateTime @default(now())
+  processedAt   DateTime?
+}
+
+model AuditCommitment {
+  id           Int      @id @default(autoincrement())
+  commitmentId String   @unique
+  proposer     String
+  encryptedHash String
+  metadata     String?
+  createdAt    DateTime @default(now())
+}

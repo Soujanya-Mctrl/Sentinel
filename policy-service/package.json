@@ -1,0 +1,22 @@
+{
+  "name": "sentinel-policy-service",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node src/server.js",
+    "worker": "node src/worker.js",
+    "listen": "node src/event-relay.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2",
+    "@prisma/client": "^5.0.0",
+    "prisma": "^5.0.0",
+    "pg": "^8.10.0",
+    "dotenv": "^16.0.0",
+    "ethers": "^6.9.0",
+    "axios": "^1.5.0"
+  }
+}
