@@ -134,13 +134,21 @@ export default function OnboardingPage() {
     };
     saveStoredWorkspace(newWs);
 
-    // Clear previous accounts so new workspace starts with 0 accounts (clean empty state)
+    // Save authenticated session state & clear accounts so new workspace starts with 0 accounts (clean empty state)
     if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "sentinel_auth_session",
+        JSON.stringify({
+          isLoggedIn: true,
+          userAddress: address || "0x7e7d00000000000000000000000000000000bBEa",
+          authenticatedAt: Date.now(),
+        })
+      );
       localStorage.removeItem("sentinel_safes");
     }
 
     toast.success(`Workspace "${finalWsName}" created successfully!`);
-    router.push("/workspace");
+    router.push("/accounts");
   };
 
   const useCaseOptions = [

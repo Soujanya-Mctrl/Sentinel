@@ -260,6 +260,9 @@ function AccountsPageContent() {
                 >
                   <button
                     onClick={() => {
+                      if (typeof window !== "undefined") {
+                        localStorage.removeItem("sentinel_auth_session");
+                      }
                       disconnectWallet();
                       router.push("/onboarding");
                     }}
