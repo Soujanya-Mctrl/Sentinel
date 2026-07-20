@@ -39,10 +39,10 @@ function SidebarNavContent() {
 
   const [collapsed, setCollapsed] = useState(false);
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
-  const [selectedWorkspace, setSelectedWorkspace] = useState("Soujanya's Workspace");
+  const [selectedWorkspace, setSelectedWorkspace] = useState("My Workspace");
 
   const workspaces = [
-    { id: "ws-1", name: "Soujanya's Workspace", type: "Workspace" },
+    { id: "ws-1", name: "My Workspace", type: "Workspace" },
     { id: "ws-2", name: "Treasury Ops Alpha", type: "Workspace" },
   ];
 

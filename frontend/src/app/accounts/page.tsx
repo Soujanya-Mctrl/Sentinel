@@ -877,7 +877,7 @@ function AccountsPageContent() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Soujanya's Treasury"
+                      placeholder="e.g. Corporate Treasury Workspace"
                       value={workspaceName}
                       onChange={(e) => setWorkspaceName(e.target.value)}
                       className="w-full bg-[#0A0A0B] border border-[rgba(245,245,247,0.12)] focus:border-[#8B8FE8] rounded-2xl px-4 py-3 text-xs text-[#F5F5F7] focus:outline-none font-mono"
@@ -1109,6 +1109,64 @@ function AccountsPageContent() {
 
             </div>
           </div>
+        )}
+
+        {/* TAB 2: WORKSPACES DIRECTORY (When workspaceStep is null) */}
+        {activeTab === "workspaces" && workspaceStep === null && createSafeStep === null && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full flex flex-col items-center space-y-8"
+          >
+            <div className="w-full flex items-center justify-between pb-6 border-b border-[rgba(245,245,247,0.08)]">
+              <button
+                onClick={() => setWorkspaceStep(1)}
+                className="px-6 py-2.5 rounded-2xl bg-[#8B8FE8] hover:bg-[#8B8FE8]/90 text-[#0A0A0B] font-bold text-xs flex items-center gap-2 shadow-[0_4px_20px_rgba(139,143,232,0.25)] transition-all cursor-pointer"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>Create workspace</span>
+              </button>
+
+              <div className="w-9 h-9 rounded-full bg-[#111113] border border-[rgba(245,245,247,0.12)] flex items-center justify-center text-[#71717A] hover:text-[#F5F5F7] cursor-pointer">
+                <User className="w-4 h-4" />
+              </div>
+            </div>
+
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {userWorkspaces.map((ws) => (
+                <div
+                  key={ws.id}
+                  onClick={() => router.push("/workspace")}
+                  className="p-6 rounded-3xl bg-[#111113]/90 backdrop-blur-2xl border border-[rgba(245,245,247,0.08)] hover:border-[#8B8FE8]/40 transition-all cursor-pointer group flex flex-col justify-between h-44 shadow-xl relative"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="w-12 h-12 rounded-2xl bg-[#8B8FE8]/20 border border-[#8B8FE8]/40 flex items-center justify-center text-[#8B8FE8] font-bold text-lg">
+                      {ws.avatarLetter}
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toast.info(`Workspace options for ${ws.name}`);
+                      }}
+                      className="p-1.5 text-[#71717A] hover:text-[#F5F5F7] rounded-lg hover:bg-[#18181B] transition-colors"
+                    >
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div>
+                    <h3 className="text-base font-bold text-[#F5F5F7] group-hover:text-[#8B8FE8] transition-colors">
+                      {ws.name}
+                    </h3>
+                    <p className="text-xs text-[#71717A] font-mono mt-1">
+                      {ws.accountsCount} Accounts · {ws.membersCount} Member
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         )}
 
       </main>

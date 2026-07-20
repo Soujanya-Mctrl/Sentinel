@@ -24,8 +24,8 @@ export default function ActivityPage() {
   const activityEvents = [
     {
       id: "act-1",
-      user: "Soujanya",
-      avatarLetter: "S",
+      user: "Admin Signer",
+      avatarLetter: "A",
       action: "updated their alias",
       target: "",
       time: "Today at 9:19 PM",
@@ -33,17 +33,17 @@ export default function ActivityPage() {
     },
     {
       id: "act-2",
-      user: "Soujanya",
-      avatarLetter: "S",
+      user: "Admin Signer",
+      avatarLetter: "A",
       action: "created the workspace",
-      target: "Soujanya's Workspace",
+      target: "My Workspace",
       time: "Today at 9:07 PM",
       category: "Workspace",
     },
     {
       id: "act-3",
-      user: "Soujanya",
-      avatarLetter: "S",
+      user: "Admin Signer",
+      avatarLetter: "A",
       action: "approved transfer proposal #42",
       target: "50,000 USDC",
       time: "Today at 8:45 PM",

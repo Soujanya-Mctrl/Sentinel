@@ -13,23 +13,38 @@ function DashboardTopBar() {
   const { address, isConnected, connectWallet, disconnectWallet } = useWallet();
 
   const [mounted, setMounted] = useState(false);
+  const [activeAccountName, setActiveAccountName] = useState("Treasury Account");
+  const [activeAddress, setActiveAddress] = useState("0x7e7d...bBEa");
+
   useEffect(() => {
     setMounted(true);
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("sentinel_safes");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.length > 0) {
+            setActiveAccountName(parsed[0].name || "Treasury Account");
+            setActiveAddress(parsed[0].address ? `${parsed[0].address.slice(0, 6)}...${parsed[0].address.slice(-4)}` : "0x7e7d...bBEa");
+          }
+        }
+      } catch (err) {}
+    }
   }, []);
 
   return (
     <header className="h-20 border-b border-[rgba(245,245,247,0.06)] bg-[#0A0A0B]/80 backdrop-blur-xl px-8 flex items-center justify-between sticky top-0 z-30">
-      {/* Left: Active Safe Account Selector & Search */}
+      {/* Left: Active Account Selector & Search */}
       <div className="flex items-center gap-4">
-        {/* Active Safe Pill (Matching All Screenshots) */}
+        {/* Active Account Pill */}
         <div className="flex items-center gap-3 px-3.5 py-1.5 rounded-2xl bg-[#111113]/90 border border-[rgba(245,245,247,0.08)] shadow-md">
           <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#8B8FE8] to-[#E84142] flex items-center justify-center text-[9px] font-bold text-white shrink-0">
-            2/3
+            1/1
           </div>
           <div className="overflow-hidden">
-            <h4 className="text-xs font-bold text-[#F5F5F7] leading-none">Soujanya&apos;s Safe</h4>
+            <h4 className="text-xs font-bold text-[#F5F5F7] leading-none">{activeAccountName}</h4>
             <p className="text-[10px] text-[#71717A] font-mono mt-1 flex items-center gap-1.5">
-              <span>0x6E54...279B</span>
+              <span>{activeAddress}</span>
               <Copy className="w-2.5 h-2.5 cursor-pointer hover:text-[#8B8FE8]" onClick={() => toast.success("Address copied")} />
               <ExternalLink className="w-2.5 h-2.5 cursor-pointer hover:text-[#8B8FE8]" />
             </p>

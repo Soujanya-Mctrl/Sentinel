@@ -68,7 +68,7 @@ function MembersPageContent() {
 
       {/* Local Storage Alert Banner (Matching Screenshot 4) */}
       <div className="p-4 rounded-2xl bg-[#111113]/80 border border-[rgba(245,245,247,0.06)] text-xs text-[#71717A] font-mono">
-        This data is stored in your local storage. Do you want to manage your <span className="text-[#F5F5F7] font-bold">Soujanya&apos;s Workspace</span> workspace address book instead?{" "}
+        This data is stored in your local storage. Do you want to manage your <span className="text-[#F5F5F7] font-bold">My Workspace</span> address book instead?{" "}
         <button onClick={() => toast.info("Switched to workspace contacts")} className="text-[#8B8FE8] underline cursor-pointer">
           Click here
         </button>

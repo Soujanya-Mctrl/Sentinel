@@ -80,7 +80,7 @@ function AccountSidebarContent() {
             <div className="w-5 h-5 rounded-lg bg-[#8B8FE8]/20 flex items-center justify-center text-[#8B8FE8] font-bold text-[10px]">
               S
             </div>
-            <span className="truncate">Soujanya&apos;s Workspace</span>
+            <span className="truncate">My Workspace</span>
           </Link>
 
           <button
