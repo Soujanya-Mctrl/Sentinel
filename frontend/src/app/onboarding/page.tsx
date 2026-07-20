@@ -53,13 +53,46 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     setStoredAccountsList(getStoredSafes());
-  }, []);
+
+    if (typeof window !== "undefined") {
+      try {
+        const rawAuth = localStorage.getItem("sentinel_auth_session");
+        const existingWorkspaces = getStoredWorkspaces();
+
+        if (rawAuth) {
+          const parsed = JSON.parse(rawAuth);
+          if (parsed && parsed.isLoggedIn) {
+            if (existingWorkspaces.length > 0) {
+              router.push("/accounts");
+              return;
+            } else {
+              setStep("ws-step-1");
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to parse auth session:", err);
+      }
+    }
+  }, [router]);
 
   // Auth Handler
   const handleAuthenticated = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "sentinel_auth_session",
+        JSON.stringify({
+          isLoggedIn: true,
+          userAddress: address || "0x7e7d00000000000000000000000000000000bBEa",
+          authenticatedAt: Date.now(),
+        })
+      );
+    }
+
     const existingWorkspaces = getStoredWorkspaces();
     if (existingWorkspaces.length > 0) {
-      router.push("/workspace");
+      router.push("/accounts");
     } else {
       setStep("ws-step-1");
     }

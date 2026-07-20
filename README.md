@@ -15,22 +15,22 @@ Sentinel bridges Safe's M-of-N multisig governance with Avalanche's **eERC (Encr
 
 ```mermaid
 graph TD
-    User[Signers / Wallet] -->|EIP-712 Signatures| SafeProxy[SafeProxy.sol]
-    SafeProxy -->|delegatecall| SafeMasterCopy[Safe.sol Master Copy]
+    User["Signers / Wallet"] -->|EIP-712 Signatures| SafeProxy["SafeProxy.sol"]
+    SafeProxy -->|delegatecall| SafeMasterCopy["Safe.sol Master Copy"]
 
     subgraph Safe Core Modules & Managers
-        SafeMasterCopy --> OwnerManager[OwnerManager.sol\nThreshold M-of-N, unmodified]
-        SafeMasterCopy --> ModuleManager[ModuleManager.sol\nexecTransactionFromModule]
-        SafeMasterCopy --> GuardManager[GuardManager.sol\ncheckTransaction hooks]
-        SafeMasterCopy --> ModuleGuard[ModuleGuard \(Safe v1.5.0+\)\nprevents module bypass of Guards]
+        SafeMasterCopy --> OwnerManager["OwnerManager.sol<br/>Threshold M-of-N, unmodified"]
+        SafeMasterCopy --> ModuleManager["ModuleManager.sol<br/>execTransactionFromModule"]
+        SafeMasterCopy --> GuardManager["GuardManager.sol<br/>checkTransaction hooks"]
+        SafeMasterCopy --> ModuleGuard["ModuleGuard (Safe v1.5.0+)<br/>prevents module bypass of Guards"]
     end
 
     subgraph Sentinel Extension Layer
-        ModuleManager -->|Authorized Module| SentinelModule[SentinelModule.sol]
-        SentinelModule --> PolicyEngine[PolicyEngine.sol\nCap + Velocity Check]
-        SentinelModule --> TreasuryManager[TreasuryManager.sol\nBatch Settlement]
-        TreasuryManager --> eERCAdapter[eERCAdapter.sol\nAvalanche eERC — encrypted balances]
-        PolicyEngine --> AuditRegistry[AuditRegistry.sol\nCommitment + reason log]
+        ModuleManager -->|Authorized Module| SentinelModule["SentinelModule.sol"]
+        SentinelModule --> PolicyEngine["PolicyEngine.sol<br/>Cap + Velocity Check"]
+        SentinelModule --> TreasuryManager["TreasuryManager.sol<br/>Batch Settlement"]
+        TreasuryManager --> eERCAdapter["eERCAdapter.sol<br/>Avalanche eERC — encrypted balances"]
+        PolicyEngine --> AuditRegistry["AuditRegistry.sol<br/>Commitment + reason log"]
     end
 ```
 
@@ -42,25 +42,25 @@ graph TD
 
 ```mermaid
 graph TD
-    Root[app/layout.tsx\nRoot Layout] --> Auth["(auth)/\nWallet-signature login"]
-    Root --> Dashboard["(dashboard)/\nSigner home"]
-    Root --> Policy["(policy)/\nAdmin config"]
-    Root --> Audit["(audit)/\nAuditor viewer"]
+    Root["app/layout.tsx<br/>Root Layout"] --> Auth["(auth)/<br/>Wallet-signature login"]
+    Root --> Dashboard["(dashboard)/<br/>Signer home"]
+    Root --> Policy["(policy)/<br/>Admin config"]
+    Root --> Audit["(audit)/<br/>Auditor viewer"]
 
-    Auth --> ConnectWallet[ConnectWalletButton]
-    Auth --> SIWE[SIWE Signature Flow]
+    Auth --> ConnectWallet["ConnectWalletButton"]
+    Auth --> SIWE["SIWE Signature Flow"]
 
-    Dashboard --> Overview[TreasuryOverview\nBalance, status badge]
-    Dashboard --> ProposalForm[NewProposalForm]
-    Dashboard --> ProposalQueue[ProposalQueue\nPending / Approved / Rejected]
+    Dashboard --> Overview["TreasuryOverview<br/>Balance, status badge"]
+    Dashboard --> ProposalForm["NewProposalForm"]
+    Dashboard --> ProposalQueue["ProposalQueue<br/>Pending / Approved / Rejected"]
 
-    Policy --> PolicyRules[PolicyRulesEditor\nCap + Velocity]
-    Policy --> AllowlistMgr[AllowlistManager]
-    Policy --> NLSetup["NL Policy Setup\n(prose → draft config)"]
+    Policy --> PolicyRules["PolicyRulesEditor<br/>Cap + Velocity"]
+    Policy --> AllowlistMgr["AllowlistManager"]
+    Policy --> NLSetup["NL Policy Setup<br/>(prose → draft config)"]
 
-    Audit --> ShareSubmit[ShareSubmissionPanel]
-    Audit --> KeyReconstruct[ClientSideReconstruction\nShamirCombine — browser only]
-    Audit --> AuditLedger[DecryptedLedgerView]
+    Audit --> ShareSubmit["ShareSubmissionPanel"]
+    Audit --> KeyReconstruct["ClientSideReconstruction<br/>ShamirCombine — browser only"]
+    Audit --> AuditLedger["DecryptedLedgerView"]
 
     style Auth fill:#18181B,stroke:#8B8FE8
     style Dashboard fill:#18181B,stroke:#8B8FE8
@@ -73,30 +73,30 @@ graph TD
 ```mermaid
 graph LR
     subgraph "Server / Chain-Derived State — TanStack Query"
-        Q1[Proposals list]
-        Q2[Policy rules]
-        Q3[Batch settlements]
-        Q4[Encrypted balance ciphertext]
-        Q5[Audit request status]
+        Q1["Proposals list"]
+        Q2["Policy rules"]
+        Q3["Batch settlements"]
+        Q4["Encrypted balance ciphertext"]
+        Q5["Audit request status"]
     end
 
     subgraph "Local / Session State — Zustand"
-        Z1[Active wallet address]
-        Z2[Active organization]
-        Z3[Setup wizard step]
-        Z4[Reconstructed key\n— ephemeral, in-memory only, never persisted]
+        Z1["Active wallet address"]
+        Z2["Active organization"]
+        Z3["Setup wizard step"]
+        Z4["Reconstructed key<br/>— ephemeral, in-memory only, never persisted"]
     end
 
     subgraph Components
-        C1[ProposalQueue] --> Q1
-        C2[PolicyRulesEditor] --> Q2
-        C3[TreasuryOverview] --> Q3
+        C1["ProposalQueue"] --> Q1
+        C2["PolicyRulesEditor"] --> Q2
+        C3["TreasuryOverview"] --> Q3
         C3 --> Q4
-        C4[AuditLedger] --> Q5
+        C4["AuditLedger"] --> Q5
         C4 --> Z4
-        C5[Any component] --> Z1
+        C5["Any component"] --> Z1
         C5 --> Z2
-        C6[SetupWizard] --> Z3
+        C6["SetupWizard"] --> Z3
     end
 
     style Z4 fill:#3A1818,stroke:#E84142
@@ -106,18 +106,18 @@ graph LR
 
 ```mermaid
 graph TD
-    UI[Frontend Components]
+    UI["Frontend Components"]
 
-    UI -->|"Wallet connect, signing,\ndirect contract reads"| Wagmi[Wagmi Hooks]
-    Wagmi --> Viem[Viem Client]
-    Viem --> Chain[Avalanche Fuji RPC]
+    UI -->|"Wallet connect, signing,<br/>direct contract reads"| Wagmi["Wagmi Hooks"]
+    Wagmi --> Viem["Viem Client"]
+    Viem --> Chain["Avalanche Fuji RPC"]
 
-    UI -->|"Policy config, proposal metadata,\naudit orchestration"| APIClient[REST API Client]
-    APIClient -->|"HTTPS, JWT session"| Backend[Sentinel Backend /api/v1]
+    UI -->|"Policy config, proposal metadata,<br/>audit orchestration"| APIClient["REST API Client"]
+    APIClient -->|"HTTPS, JWT session"| Backend["Sentinel Backend /api/v1"]
 
     Chain -.->|"on-chain events"| Backend
 
-    SDK[contracts-sdk package\nTyped ABIs + addresses] --> Wagmi
+    SDK["contracts-sdk package<br/>Typed ABIs + addresses"] --> Wagmi
     SDK --> APIClient
 
     style Chain fill:#18181B,stroke:#8B8FE8
