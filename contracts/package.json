@@ -1,0 +1,16 @@
+{
+  "name": "sentinel-contracts",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "hardhat": "^2.12.7",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "ethers": "^6.0.0",
+    "chai": "^4.3.7"
+  },
+  "scripts": {
+    "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
+    "deploy:fuji": "hardhat run scripts/deploy.js --network fuji"
+  }
+}
